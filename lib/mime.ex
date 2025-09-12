@@ -1,4 +1,4 @@
-defmodule Mime do
+defmodule MetaProgramming.Mime do
   # external_resource is a macro that allows you to mark a file as an external resource
   # so that when it is modified, the module is recompiled.
   @external_resource mimes_path = Path.join([__DIR__, "../priv", "mimes.txt"])

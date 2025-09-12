@@ -1,4 +1,4 @@
-defmodule Loop do
+defmodule MetaProgramming.Loop do
   defmacro while(expression, do: block) do
     quote do
       try do

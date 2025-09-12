@@ -1,4 +1,4 @@
-defmodule Math do
+defmodule MetaProgramming.Math do
   defmacro say({:+, _, [lhs, rhs]}) do
     quote do
       lhs = unquote(lhs)

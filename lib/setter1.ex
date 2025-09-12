@@ -1,4 +1,4 @@
-defmodule Setter do
+defmodule MetaProgramming.Setter do
   defmacro bind_name1(string) do
     quote do
       name = unquote(string)

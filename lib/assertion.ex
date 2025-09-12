@@ -1,4 +1,4 @@
-defmodule Assertion do
+defmodule MetaProgramming.Assertion do
   @moduledoc """
   Exercises:
   - Implement assert for every operator in Elixir.
@@ -8,7 +8,7 @@ defmodule Assertion do
   - Run test cases in parallel within Assertion.T est.run/2 via spawned processes.
   - Add reports for the module. Include pass/fail counts and execution time.
   """
-  defmacro __using__(options \\ []) do
+  defmacro __using__(_options \\ []) do
     quote do
       import unquote(__MODULE__)
       # Elixir allows for a tiny amount of mutability here using accumulate: true
@@ -20,7 +20,7 @@ defmodule Assertion do
 
   defmacro __before_compile__(_env) do
     quote do
-      def run, do: Assertion.Test.run(@tests, __MODULE__)
+      def run, do: MetaProgramming.Assertion.Test.run(@tests, __MODULE__)
     end
   end
 
@@ -38,12 +38,12 @@ defmodule Assertion do
     # but if you unquote the same variable multiple times it gets evaluated multiple times.
     # with bind_quoted it only gets evaluated a single time.
     quote bind_quoted: [operator: operator, lhs: lhs, rhs: rhs] do
-      Assertion.Test.assert(operator, lhs, rhs)
+      MetaProgramming.Assertion.Test.assert(operator, lhs, rhs)
     end
   end
 end
 
-defmodule Assertion.Test do
+defmodule MetaProgramming.Assertion.Test do
   def run(tests, module) do
     Enum.each(tests, fn {test_func, description} ->
       case apply(module, test_func, []) do
@@ -89,7 +89,7 @@ defmodule Assertion.Test do
 end
 
 defmodule MathTest do
-  use Assertion
+  use MetaProgramming.Assertion
 
   test "integers can be added and subtracted" do
     assert 1 + 1 == 2

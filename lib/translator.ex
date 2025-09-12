@@ -1,4 +1,4 @@
-defmodule Translator do
+defmodule MetaProgramming.Translator do
   defmacro __using__(_options) do
     quote do
       Module.register_attribute(__MODULE__, :locales,

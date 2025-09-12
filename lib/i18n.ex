@@ -1,5 +1,5 @@
-defmodule I18n do
-  use Translator
+defmodule MetaProgramming.I18n do
+  use MetaProgramming.Translator
 
   locale("en",
     flash: [

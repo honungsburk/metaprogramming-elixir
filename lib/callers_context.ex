@@ -1,4 +1,4 @@
-defmodule Mod do
+defmodule MetaProgramming.Mod do
   defmacro definto do
     IO.puts("In macro's context (#{__MODULE__}).")
 
@@ -16,6 +16,6 @@ defmodule Mod do
 end
 
 defmodule MyModule do
-  require Mod
-  Mod.definto()
+  require MetaProgramming.Mod
+  MetaProgramming.Mod.definto()
 end
