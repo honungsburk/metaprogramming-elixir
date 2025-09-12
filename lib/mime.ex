@@ -1,5 +1,9 @@
 defmodule Mime do
-  for line <- File.stream!(Path.join([__DIR__, "../priv", "mimes.txt"]), [], :line) do
+  # external_resource is a macro that allows you to mark a file as an external resource
+  # so that when it is modified, the module is recompiled.
+  @external_resource mimes_path = Path.join([__DIR__, "../priv", "mimes.txt"])
+
+  for line <- File.stream!(mimes_path, [], :line) do
     [type, rest] = line |> String.split("\t") |> Enum.map(&String.trim(&1))
     extensions = String.split(rest, ~r/,\s?/)
 
