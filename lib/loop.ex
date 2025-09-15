@@ -6,7 +6,7 @@ defmodule MetaProgramming.Loop do
           if unquote(expression) do
             unquote(block)
           else
-            Loop.break()
+            MetaProgramming.Loop.break()
           end
         end
       catch
