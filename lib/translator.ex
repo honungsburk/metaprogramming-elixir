@@ -55,10 +55,10 @@ defmodule MetaProgramming.Translator do
     |> Regex.split(string, on: [:head, :tail])
     |> Enum.reduce("", fn
       <<"%{" <> rest>>, acc ->
-        key = String.to_atom(String.rstrip(rest, ?}))
+        key = String.to_atom(String.trim_trailing(rest, "}"))
 
         quote do
-          unquote(acc) <> to_string(Map.fetch!(bindings, unquote(key)))
+          unquote(acc) <> to_string(MetaProgramming.Translator.lookup!(bindings, unquote(key)))
         end
 
       segment, acc ->
@@ -68,4 +68,12 @@ defmodule MetaProgramming.Translator do
 
   defp append_path("", next), do: to_string(next)
   defp append_path(current, next), do: "#{current}.#{next}"
+
+  def lookup!(bindings, key) when is_list(bindings) do
+    Keyword.fetch!(bindings, key)
+  end
+
+  def lookup!(bindings, key) do
+    Map.fetch!(bindings, key)
+  end
 end
