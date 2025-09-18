@@ -4,28 +4,29 @@ defmodule MetaProgramming.Html do
            line |> String.trim() |> String.to_atom()
          end)
 
-  for tag <- @tags do
-    defmacro unquote(tag)(attrs, do: inner) do
-      tag = unquote(tag)
-      quote do: tag(unquote(tag), unquote(attrs), do: unquote(inner))
-    end
-
-    defmacro unquote(tag)(attrs \\ []) do
-      tag = unquote(tag)
-      quote do: tag(unquote(tag), unquote(attrs))
-    end
-  end
-
   defmacro markup(do: block) do
     quote do
-      import Kernel, except: [div: 2]
       {:ok, var!(buffer, MetaProgramming.Html)} = start_buffer([])
-      unquote(block)
+      unquote(Macro.postwalk(block, &postwalk/1))
       result = render(var!(buffer, MetaProgramming.Html))
       :ok = stop_buffer(var!(buffer, MetaProgramming.Html))
       result
     end
   end
+
+  def postwalk({:text, _meta, [string]}) do
+    quote do: put_buffer(var!(buffer, MetaProgramming.Html), to_string(unquote(string)))
+  end
+
+  def postwalk({tag_name, _meta, [[do: inner]]}) when tag_name in @tags do
+    quote do: tag(unquote(tag_name), [], do: unquote(inner))
+  end
+
+  def postwalk({tag_name, _meta, [attrs, [do: inner]]}) when tag_name in @tags do
+    quote do: tag(unquote(tag_name), unquote(attrs), do: unquote(inner))
+  end
+
+  def postwalk(ast), do: ast
 
   def start_buffer(state), do: Agent.start_link(fn -> state end)
 
